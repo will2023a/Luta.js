@@ -4,10 +4,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const monsterHealthSpan = document.querySelector('.monster-health');
     const monsterAttackSpan = document.querySelector('.monster-attack');
     const logList = document.querySelector('.log-list');
-    const attackButtons = document.querySelectorAll('.attack');
-    const healPlayerButton = document.querySelector('.heal-player'); // Botão de cura do jogador
-    const healMonsterButton = document.querySelector('.heal-monster'); // Botão de cura do monstro
-    const monsterButton = document.querySelector('.monster .attack');
+    const attackPlayerButton = document.querySelector('.attack-player'); // Corrigido o seletor
+    const healPlayerButton = document.querySelector('.heal-player');
+    const attackMonsterButton = document.querySelector('.attack-monster'); // Corrigido o seletor
+    const healMonsterButton = document.querySelector('.heal-monster');
 
     let playerHealth = 100;
     const playerAttack = 10;
@@ -18,6 +18,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateHealthDisplay() {
         playerHealthSpan.textContent = playerHealth;
         monsterHealthSpan.textContent = monsterHealth;
+
+        // Calcula a largura das barras de saúde com base na saúde atual
+        const playerHealthPercent = (playerHealth / 100) * 100;
+        const monsterHealthPercent = (monsterHealth / 100) * 100;
+
+        // Define a largura das barras de saúde
+        document.querySelector('.player-health-bar').style.width = `${playerHealthPercent}%`;
+        document.querySelector('.monster-health-bar').style.width = `${monsterHealthPercent}%`;
     }
 
     // Função para adicionar uma mensagem ao log de batalha
@@ -35,18 +43,23 @@ document.addEventListener('DOMContentLoaded', function() {
         if (monsterHealth <= 0) {
             monsterHealth = 0;
             addToLog('Monster was defeated!');
-            monsterButton.disabled = true;
+            attackMonsterButton.disabled = true;
             displayWinner("Player");
         }
         updateHealthDisplay();
     }
 
     // Função para a cura do jogador
-    function playerHealAction() {
+    function healPlayerAction() {
         const healAmount = 10;
-        playerHealth += healAmount;
-        addToLog(`Player healed for ${healAmount} health`);
-        updateHealthDisplay();
+        // Verifica se a saúde do jogador não está no máximo (100)
+        if (playerHealth < 100) {
+            playerHealth += healAmount;
+            addToLog(`${player} healed for ${healAmount} health`);
+            updateHealthDisplay();
+        } else {
+            addToLog(`${player} is already at full health!`);
+        }
     }
 
     // Função para o ataque do monstro
@@ -57,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (playerHealth <= 0) {
             playerHealth = 0;
             addToLog('Player was defeated!');
-            attackButtons.forEach(button => button.disabled = true);
+            attackPlayerButton.disabled = true;
             healPlayerButton.disabled = true; // Desativa o botão de cura do jogador
             displayWinner("Monster");
         }
@@ -65,15 +78,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Função para a cura do monstro
-    function monsterHealAction() {
+    function healMonsterAction() {
         const healAmount = 10;
-        monsterHealth += healAmount;
-        addToLog(`Monster healed for ${healAmount} health`);
-        updateHealthDisplay();
+        if (monsterHealth < 100) {
+            monsterHealth += healAmount;
+            addToLog(`Monster healed for ${healAmount} health`);
+            updateHealthDisplay();
+        } else {
+            addToLog('Monster is already at full health!');
+        }
     }
 
-    // Função para exibir o vencedor
-    function displayWinner(winner) {
+       // Função para exibir o vencedor
+       function displayWinner(winner) {
         const winnerMessage = document.createElement('div');
         winnerMessage.textContent = `${winner} wins!`;
         winnerMessage.style.fontSize = '24px';
@@ -89,14 +106,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Adiciona event listeners para os botões de ataque e cura
-    attackButtons.forEach(button => button.addEventListener('click', playerAttackAction));
-    healPlayerButton.addEventListener('click', playerHealAction); // Event listener para o botão de cura do jogador
-    monsterButton.addEventListener('click', monsterAttackAction);
-    healMonsterButton.addEventListener('click', monsterHealAction); // Event listener para o botão de cura do monstro
+    attackPlayerButton.addEventListener('click', playerAttackAction);
+    healPlayerButton.addEventListener('click', healPlayerAction);
+    attackMonsterButton.addEventListener('click', monsterAttackAction);
+    healMonsterButton.addEventListener('click', healMonsterAction);
 
     // Inicializa a exibição da saúde
     updateHealthDisplay();
-
 });
 
 function goBack() {
