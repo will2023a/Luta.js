@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/style.css">
+    <title>Fight</title>
+</head>
+<body>
+    <div class="video-container">
+        <video autoplay muted loop id="myVideo">
+            <source src="/assets/another-world-moewalls-com.mp4" type="video/mp4">
+        </video>
+        
+        <div class="container">
+            <button onclick="goBack()" style="height: 30px;">Voltar</button>
+            <div class="player">
+                <div class="image-container">
+                    <img src="./assets/player.jpeg" alt="player">
+                </div>
+                <div class="stats">
+                    <h2>Spider</h2>
+                    <div class="health-bar player-health-bar"></div>
+                    <div class="player-stats">
+                        <p>Health: <span class="player-health">100</span></p>
+                        <p>Attack: <span class="player-attack">10</span></p>
+                    </div>
+                    <div class="button-group">
+                        <button class="attack">Attack</button>
+                        <button class="heal-player">Heal</button>
+                    </div>
+                </div>
+            </div>
+            <div class="monster">
+                <div class="image-container">
+                    <img src="./assets/monster.jpeg" alt="monster">
+                </div>
+                <div class="stats">
+                    <h2>Urucumamonsther</h2>
+                    <div class="health-bar monster-health-bar"></div>
+                    <div class="monster-stats">
+                        <p>Health: <span class="monster-health">100</span></p>
+                        <p>Attack: <span class="monster-attack">10</span></p>
+                    </div>
+                    <div class="button-group">
+                        <button class="attack">Attack</button>
+                        <button class="heal-monster">Heal</button>
+                    </div>
+                </div>
+            </div>
+        </div>   
+       
+        <div class="log">
+            <h2>Histórico</h2>
+            <ul class="log-list">
+                <li>Player attacked Monster for 10 damage</li>
+                <li>Monster attacked Player for 10 damage</li>
+            </ul>
+        </div>
+    </div> 
+    <script src="./assets/jquery-3.5.1.min.js"></script>
+    <script src="./assets/javascript.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    // Função para obter os parâmetros da URL
+    function getUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const params = {};
+        for (const [key, value] of urlParams.entries()) {
+            params[key] = value;
+        }
+        return params;
+    }
+
+    // Função para atualizar dinamicamente as informações do jogador e do monstro na página de luta
+    function updateFighterInfo(player, playerImage, monster, monsterImage) {
+        const playerElement = document.querySelector('.player');
+        const playerImageElement = playerElement.querySelector('img');
+        const playerStats = playerElement.querySelector('.stats');
+        const monsterElement = document.querySelector('.monster');
+        const monsterImageElement = monsterElement.querySelector('img');
+        const monsterStats = monsterElement.querySelector('.stats');
+
+        playerImageElement.src = playerImage;
+        playerImageElement.alt = player;
+        playerStats.querySelector('h2').textContent = player;
+        monsterImageElement.src = monsterImage;
+        monsterImageElement.alt = monster;
+        monsterStats.querySelector('h2').textContent = monster;
+    }
+
+    // Função para atualizar dinamicamente as informações de saúde do jogador e do monstro na página de luta
+    function updateHealthDisplay(playerHealth, monsterHealth) {
+        const playerHealthSpan = document.querySelector('.player-health');
+        const monsterHealthSpan = document.querySelector('.monster-health');
+
+        playerHealthSpan.textContent = playerHealth;
+        monsterHealthSpan.textContent = monsterHealth;
+    }
+
+    // Função para adicionar uma mensagem ao log de batalha
+    function addToLog(message) {
+        const logList = document.querySelector('.log-list');
+        const li = document.createElement('li');
+        li.textContent = message;
+        logList.appendChild(li);
+    }
+
+    // Função para exibir o vencedor
+    function displayWinner(winner) {
+        const winnerMessage = document.createElement('div');
+        winnerMessage.textContent = `${winner} wins!`;
+        winnerMessage.style.fontSize = '24px';
+        winnerMessage.style.fontWeight = 'bold';
+        winnerMessage.style.color = 'white';
+        winnerMessage.style.backgroundColor = 'black';
+        winnerMessage.style.padding = '20px';
+        winnerMessage.style.position = 'absolute';
+        winnerMessage.style.top = '50%';
+        winnerMessage.style.left = '50%';
+        winnerMessage.style.transform = 'translate(-50%, -50%)';
+        document.body.appendChild(winnerMessage);
+    }
+
+    // Obtenha os parâmetros da URL
+    const params = getUrlParams();
+    const player = params.player || 'Spider';
+    const playerImage = params.playerImage || './assets/player.jpeg';
+    const monster = params.monster || 'Urucumamonsther';
+    const monsterImage = params.monsterImage || './assets/monster.jpeg';
+
+    // Atualize as informações do jogador e do monstro na página de luta
+    updateFighterInfo(player, playerImage, monster, monsterImage);
+
+    // Inicialize a exibição da saúde do jogador e do monstro na página de luta
+    updateHealthDisplay(100, 100);
+
+    // Adicione event listeners para os botões de ataque e cura
+    const attackButtons = document.querySelectorAll('.attack');
+    const healPlayerButton = document.querySelector('.heal-player');
+    const healMonsterButton = document.querySelector('.heal-monster');
+
+    attackButtons.forEach(button => button.addEventListener('click', function() {
+        const damage = Math.floor(Math.random() * 10) + 1;
+        addToLog(`${player} attacked ${monster} for ${damage} damage`);
+        updateHealthDisplay(100, 100 - damage);
+        if (100 - damage <= 0) {
+            displayWinner(player);
+        }
+    }));
+
+    healPlayerButton.addEventListener('click', function() {
+        const healAmount = 10;
+        addToLog(`${player} healed for ${healAmount} health`);
+        updateHealthDisplay(100 + healAmount, 100);
+    });
+
+    healMonsterButton.addEventListener('click', function() {
+        const healAmount = 10;
+        addToLog(`${monster} healed for ${healAmount} health`);
+        updateHealthDisplay(100, 100 + healAmount);
+    });
+});
+
+    </script>
+</body>
+</html>
