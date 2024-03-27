@@ -1,39 +1,40 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu</title>
-    <link rel="stylesheet" href="./assets/style.css">
-</head>
-<body>
-    <div class="video-container">
-       
-        
-    <div class="container-menu">
-        <h1>Bem-vindo à luta com Javascript!</h1>
-        <form id="fighter-selection">
-           <p> <label for="player">Selecione o lutador:</label>
-            <select name="player" id="player">
-                <option value="Spider" data-imagem="./assets/player.jpeg">Spider</option>
-                <option value="Lion" data-imagem="./assets/lion.jpeg">Lion</option>
-                <!-- Adicione mais opções de lutadores conforme necessário -->
-            </select>
-        </p>
-            <p><label for="monster">Selecione o monstro:</label>
-            <select name="monster" id="monster">
-                <option value="Urucumamonsther" data-imagem="./assets/monster.jpeg">Urucumamonsther</option>
-                <option value="Dragon" data-imagem="./assets/dragon.jpg">Dragon</option>
-                <!-- Adicione mais opções de monstros conforme necessário -->
-            </select>
-        </p>
-            <button type="submit">Iniciar Luta</button>
-        </form>
-    </div>
-    <script src="./assets/menu.js"></script>
-    <script>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Menu</title>
+        <link rel="stylesheet" href="./assets/style.css">
+    </head>
+    <body>
+        <div class="video-container">
+            <div class="container-menu">
+                <h1>Bem-vindo à luta com Javascript!</h1>
+                <form id="fighter-selection">
+                    <p> <label for="player">Selecione o lutador:</label>
+                        <select name="player" id="player">
+                            <option value="Spider"
+                                data-imagem="./assets/player.jpeg">Spider</option>
+                            <option value="Lion"
+                                data-imagem="./assets/lion.jpeg">Lion</option>
+                            <!-- Adicione mais opções de lutadores conforme necessário -->
+                        </select>
+                    </p>
+                    <p><label for="monster">Selecione o monstro:</label>
+                        <select name="monster" id="monster">
+                            <option value="Urucumamonsther"
+                                data-imagem="./assets/monster.jpeg">Urucumamonsther</option>
+                            <option value="Dragon"
+                                data-imagem="./assets/dragon.jpg">Dragon</option>
+                            <!-- Adicione mais opções de monstros conforme necessário -->
+                        </select>
+                    </p>
+                    <button type="submit">Iniciar Luta</button>
+                </form>
+            </div>
+            <script src="./assets/menu.js"></script>
+            <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Event listener para o formulário de seleção de lutadores
         const form = document.getElementById('fighter-selection');
         form.addEventListener('submit', function(event) {
             event.preventDefault();
@@ -41,10 +42,9 @@
             const playerImage = document.querySelector('#player option:checked').getAttribute('data-imagem');
             const monster = document.getElementById('monster').value;
             const monsterImage = document.querySelector('#monster option:checked').getAttribute('data-imagem');
-            // Redirecionar para a página da luta com os lutadores selecionados
             window.location.href = `luta.html?player=${player}&playerImage=${playerImage}&monster=${monster}&monsterImage=${monsterImage}`;
         });
     });
 </script>
-</body>
-</html>
+        </body>
+    </html>
